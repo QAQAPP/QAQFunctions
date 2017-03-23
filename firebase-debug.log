@@ -1,0 +1,159 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /usr/local/Cellar/node/7.7.3/bin/node /usr/local/bin/firebase deploy
+[debug] CLI Version:  3.5.0
+[debug] Platform:     darwin
+[debug] Node Version: v7.7.3
+[debug] Time:         Wed Mar 22 2017 19:24:58 GMT-0700 (PDT)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[debug] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/8wyB_ujMQIzA33hOwidktgDuszPIvTVGNznOhHUjh-FcEs8barleNiE_LbpNxNde',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Mar 22 2017 19:24:58 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/voceler-8d934  
+ Wed Mar 22 2017 19:24:58 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/voceler-8d934/tokens  
+ Wed Mar 22 2017 19:25:00 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'voceler-8d934'...
+[info] 
+[info] i  deploying database, functions, hosting
+[info] ✔  database: rules ready to deploy.
+[debug] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "firebase-admin": "^4.1.2",
+    "firebase-functions": "^0.5"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[info] i  runtimeconfig: ensuring necessary APIs are enabled...
+[debug] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/voceler-8d934?view=CONSUMER_VIEW  
+ Wed Mar 22 2017 19:25:01 GMT-0700 (PDT)
+[debug] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/voceler-8d934?view=CONSUMER_VIEW  
+ Wed Mar 22 2017 19:25:01 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[info] ✔  runtimeconfig: all necessary APIs are enabled
+[debug] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/voceler-8d934  
+ Wed Mar 22 2017 19:25:02 GMT-0700 (PDT)
+[debug] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/voceler-8d934/apiKeys  
+ Wed Mar 22 2017 19:25:02 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/voceler-8d934/configs  
+ Wed Mar 22 2017 19:25:03 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] > [functions] runtime config materialized as: {
+  "firebase": {
+    "databaseURL": "https://voceler-8d934.firebaseio.com",
+    "storageBucket": "voceler-8d934.appspot.com",
+    "apiKey": "AIzaSyBv3DTLE3n55YzZKsAxZJ6DQ8DlT-ha4Zw",
+    "authDomain": "voceler-8d934.firebaseapp.com"
+  }
+}
+[debug] > [functions] parsed triggers: [
+  {
+    "eventTrigger": {
+      "resource": "projects/_/instances/voceler-8d934/refs/Questions-v1/{qid}/options/{oid}/val",
+      "eventType": "providers/google.firebase.database/eventTypes/ref.write"
+    },
+    "name": "sendNotification",
+    "entryPoint": "sendNotification"
+  }
+]
+[info] i  functions: packaged functions (1.82 KB) for uploading
+[debug] >>> HTTP REQUEST GET https://www.googleapis.com/storage/v1/b/staging.voceler-8d934.appspot.com  
+ Wed Mar 22 2017 19:25:05 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST POST https://www.googleapis.com/upload/storage/v1/b/staging.voceler-8d934.appspot.com/o?uploadType=media&name=firebase-functions-source ReadStream {
+  _readableState: 
+   ReadableState {
+     objectMode: false,
+     highWaterMark: 65536,
+     buffer: BufferList { head: [Object], tail: [Object], length: 1 },
+     length: 1866,
+     pipes: null,
+     pipesCount: 0,
+     flowing: null,
+     ended: true,
+     endEmitted: false,
+     reading: false,
+     sync: false,
+     needReadable: false,
+     emittedReadable: true,
+     readableListening: false,
+     resumeScheduled: false,
+     defaultEncoding: 'utf8',
+     ranOut: false,
+     awaitDrain: 0,
+     readingMore: false,
+     decoder: null,
+     encoding: null },
+  readable: true,
+  domain: null,
+  _events: { end: [Function] },
+  _eventsCount: 1,
+  _maxListeners: undefined,
+  path: '/var/folders/_l/j8p65jln1r79gytpcm5l3cl00000gn/T/firebase-functions-26497De08GiV53arK.zip',
+  fd: 18,
+  flags: 'r',
+  mode: 438,
+  start: undefined,
+  end: undefined,
+  autoClose: true,
+  pos: undefined,
+  bytesRead: 1866 } 
+ Wed Mar 22 2017 19:25:05 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[info] i  hosting: preparing . directory for upload...
+[debug] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/voceler-8d934/uploads/-Kfsyozd0Mpfg76IHq1M?fileCount=2841&message=  
+ Wed Mar 22 2017 19:25:07 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[info] ✔  hosting: . folder uploaded successfully
+[info] ✔  hosting: 2841 files uploaded successfully
+[info] i  starting release process (may take several minutes)...
+[debug] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1beta2/projects/voceler-8d934/locations/us-central1/functions  
+ Wed Mar 22 2017 19:25:22 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[info] i  functions: updating function sendNotification...
+[debug] Trigger is: 
+[debug] >>> HTTP REQUEST PUT https://cloudfunctions.googleapis.com/v1beta2/projects/voceler-8d934/locations/us-central1/functions/sendNotification { sourceArchiveUrl: 'gs://staging.voceler-8d934.appspot.com/firebase-functions-source',
+  name: 'projects/voceler-8d934/locations/us-central1/functions/sendNotification',
+  entryPoint: 'sendNotification',
+  eventTrigger: 
+   { resource: 'projects/_/instances/voceler-8d934/refs/Questions-v1/{qid}/options/{oid}/val',
+     eventType: 'providers/google.firebase.database/eventTypes/ref.write' } } 
+ Wed Mar 22 2017 19:25:22 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1beta2/projects/voceler-8d934/locations/us-central1/functions  
+ Wed Mar 22 2017 19:25:23 GMT-0700 (PDT)
+[debug] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1beta2/operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4  
+ Wed Mar 22 2017 19:25:23 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] <<< HTTP RESPONSE 200
+[debug] [functions] operation poll: sendNotification: update operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4 is not done.
+[debug] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1beta2/operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4  
+ Wed Mar 22 2017 19:25:28 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] [functions] operation poll: sendNotification: update operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4 is not done.
+[debug] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1beta2/operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4  
+ Wed Mar 22 2017 19:25:33 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] [functions] operation poll: sendNotification: update operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4 is not done.
+[debug] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1beta2/operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4  
+ Wed Mar 22 2017 19:25:39 GMT-0700 (PDT)
+[debug] <<< HTTP RESPONSE 200
+[debug] [functions] operation poll: sendNotification: update operations/dm9jZWxlci04ZDkzNC91cy1jZW50cmFsMS9zZW5kTm90aWZpY2F0aW9uL3BaaVo4TTVpMkI4 is not done.
