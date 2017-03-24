@@ -10,69 +10,87 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-// exports.sendNotification2 = functions.database.ref("Suggestions")
-// .onWrite(event => {
-// 	// This registration token comes from the client FCM SDKs.
-// 	var registrationToken = "eY9GK_jgkUk:APA91bG9FP0me2iz2zzx2FPP-yhA9YGg3ME6LQ3vk1GHoBPHwak20PW2AcMLWupH_4gxhsDbnFo1Va9ECufkVKmL7ef4bOoHI5PXk7EYMI6kj4BgQP76O0oIiCV_gqjUCvtGcIg2jItm";
+function sendNotification(token, payload){
+	admin.messaging().sendToDevice(token, payload).then(function(response){
+		console.log("Successfully sent message: ", response);
+	}).catch(function(error){
+		console.log("Error sending message: ", error);
+	})
+}
 
-// 	// See the "Defining the message payload" section below for details
-// 	// on how to define a message payload.
-// 	var payload = {
-// 	    "notification" : {
-// 	      "body" : "great match!",
-// 	      "title" : "Portugal vs. Denmark",
-// 	      "icon" : "myicon"
-// 	    },
-// 	    "data" : {
-// 	      "Nick" : "Mario",
-// 	      "Room" : "PortugalVSDenmark"
-// 	    }
-// 	};
-
-// 	// Send a message to the device corresponding to the provided
-// 	// registration token.
-// 	admin.messaging().sendToDevice(registrationToken, payload)
-// 	  .then(function(response) {
-// 	    // See the MessagingDevicesResponse reference documentation for
-// 	    // the contents of response.
-// 	    console.log("Successfully sent message:", response);
-// 	  })
-// 	  .catch(function(error) {
-// 	    console.log("Error sending message:", error);
-// 	  });
-// })
-
-exports.sendNotification = functions.database.ref("Questions-v1/{qid}/options/{oid}/val")
-.onWrite(event => {
-	var request = event.data.val();
-	var payload = {
-		data:{
-			username:"Zhenyang Zhong",
-			email:"zhenyanz@lazy-y.com"
-		}
-	};
+exports.newAnswer = functions.database.ref("Questions-v1/{qid}/Users/{uid}").onWrite(event => {
 	var db = admin.database();
-	db.ref("Questions-v1").child(event.params.qid).child("owner").once("value", function(snapshot){
+	db.ref("Questions-v1").child(event.params.qid).child("content").child("askerID").once("value", function(snapshot){
 		var ref = db.ref("Users-v1").child(snapshot.val()).child("info").child("FCM Token");
 		ref.once("value", function(snapshot) {
-			var payload = {
-			    "notification" : {
-			      "body" : "Your question was answered!",
-			      "title" : "Question answered!"
-			    }
-			};
 			const token = snapshot.val();
-			admin.messaging().sendToDevice(token, payload).then(function(response){
-				console.log("Successfully sent message: ", response);
-			}).catch(function(error){
-				console.log("Error sending message: ", error);
+			var ref = db.ref("Users-v1").child(event.params.uid).child("info").child("username").once("value", function(snapshot){
+				var user = "Unknown user"
+				if (snapshot.val() != "") user = snapshot.val();
+				var bodyText = user + " answered your question";
+				var payload = {
+				    notification : {
+				      body : bodyText
+				      // title : "Question answered!"
+				    }
+				};
+				sendNotification(token, payload);
 			})
 		});
 	})
+});
 
-	// console.log("request", request);
-	// console.log("uid", event.params.uid);
-	// console.log("val", functions.database.ref("Suggestions/" + event.params.uid).val());
-	// functions.database.ref("Users-v1").child(event.params.uid).child("notifications");
-})
+exports.numAnswer = functions.database.ref("Questions-v1/{qid}/content/val").onWrite(event => {
+	var val = event.data.val();
+	if (val > 0 && val%5 == 0){
+		var copy = val;
+		while (copy%2 == 0) copy /= 2;
+		if (copy == 5){
+			var db = admin.database();
+			db.ref("Questions-v1").child(event.params.qid).child("content").child("askerID").once("value", function(snapshot){
+				var ref = db.ref("Users-v1").child(snapshot.val()).child("info").child("FCM Token");
+				ref.once("value", function(snapshot) {
+					var bodyText = "Your question got " + val.toString() + " responses.";
+					var payload = {
+					    notification : {
+					      body : bodyText
+					    }
+					};
+					const token = snapshot.val();
+					sendNotification(token, payload);
+				});
+			})
+		}
+	}
+});
 
+
+exports.questionConclude = functions.database.ref("Questions-v1/{qid}/content/conclusion").onWrite(event => {
+	var oid = event.data.val();
+	if (oid != "nil"){
+		const db = admin.database();
+		var ref = db.ref("Questions-v1").child(event.params.qid).child("options").child(oid).child("offerBy");
+		ref.once("value", function(snapshot){
+			const uid = snapshot.val();
+			var ref = db.ref("Users-v1").child(uid).child("info").child("FCM Token");
+			ref.once("value", function(snapshot){
+				const token = snapshot.val();
+				const ref = db.ref("Questions-v1").child(event.params.qid).child("content").child("askerID")
+				ref.once("value", function(snapshot){
+					const askerID = snapshot.val();
+					const ref = db.ref("Users-v1").child(uid).child("info").child("username");
+					ref.once("value", function(snapshot){
+						const user = snapshot.val();
+						const bodyText = "Congratulations! " + user + " accepted your answer.";
+						payload = {
+						    notification : {
+						      body : bodyText
+						    }
+						};
+						sendNotification(token, payload);
+					});
+				});
+			});
+		});
+	}
+});
