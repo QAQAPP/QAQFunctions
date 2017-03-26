@@ -24,7 +24,8 @@ function addNotification(uid, details, qid, type){
 	newNotiRef.set({
 		details: details,
 		qid: qid,
-		type: type
+		type: type,
+		viewed: false
 	});
 	return newNotiRef.key
 }
