@@ -26,6 +26,7 @@ function addNotification(uid, details, qid, type){
 		qid: qid,
 		type: type
 	});
+	return newNotiRef.key
 }
 
 exports.questionAnswered = functions.database.ref("Questions-v1/{qid}/Users/{uid}").onWrite(event => {
@@ -39,16 +40,17 @@ exports.questionAnswered = functions.database.ref("Questions-v1/{qid}/Users/{uid
 				var user = "Unknown user"
 				if (snapshot.val() != "") user = snapshot.val();
 				var bodyText = user + " answered your question";
+				const nid = addNotification(uid, event.params.uid, event.params.qid, "questionAnswered");
 				var payload = {
 				    notification : {
 				      body : bodyText
 				      // title : "Question answered!"
 				    },
 				    data :{
-				    	qid : event.params.qid
+				    	qid : event.params.qid,
+				    	nid : nid
 				    }
 				};
-				addNotification(uid, event.params.uid, event.params.qid, "questionAnswered");
 				sendNotification(token, payload);
 			})
 		});
@@ -66,16 +68,17 @@ exports.questionViewed = functions.database.ref("Questions-v1/{qid}/content/val"
 				var ref = db.ref("Users-v1").child(snapshot.val()).child("info").child("FCM Token");
 				ref.once("value", function(snapshot) {
 					var bodyText = "Your question got " + val.toString() + " responses.";
+					const nid = addNotification(uid, val, event.params.qid, "questionViewed");
 					var payload = {
 					    notification : {
 					      body : bodyText
 					    },
 					    data :{
-					    	qid : event.params.qid
+					    	qid : event.params.qid,
+					    	nid : nid
 					    }
 					};
 					const token = snapshot.val();
-					addNotification(uid, val, event.params.qid, "questionViewed");
 					sendNotification(token, payload);
 				});
 			})
@@ -101,15 +104,16 @@ exports.questionConcluded = functions.database.ref("Questions-v1/{qid}/content/c
 					ref.once("value", function(snapshot){
 						const user = snapshot.val();
 						const bodyText = "Congratulations! " + user + " accepted your answer.";
+						nid = addNotification(uid, askerID, event.params.qid, "questionConcluded");
 						payload = {
 						    notification : {
 						      body : bodyText
 						    },
 						    data :{
-						    	qid : event.params.qid
+						    	qid : event.params.qid,
+						    	nid : nid
 						    }
 						};
-						addNotification(uid, askerID, event.params.qid, "questionConcluded");
 						sendNotification(token, payload);
 					});
 				});
