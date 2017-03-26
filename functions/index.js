@@ -41,15 +41,14 @@ exports.questionAnswered = functions.database.ref("Questions-v1/{qid}/Users/{uid
 				var user = "Unknown user"
 				if (snapshot.val() != "") user = snapshot.val();
 				var bodyText = user + " answered your question";
-				const nid = addNotification(uid, event.params.uid, event.params.qid, "questionAnswered");
+				// const nid = addNotification(uid, event.params.uid, event.params.qid, "questionAnswered");
 				var payload = {
 				    notification : {
 				      body : bodyText
 				      // title : "Question answered!"
 				    },
 				    data :{
-				    	qid : event.params.qid,
-				    	nid : nid
+				    	qid : event.params.qid
 				    }
 				};
 				sendNotification(token, payload);
@@ -69,14 +68,13 @@ exports.questionViewed = functions.database.ref("Questions-v1/{qid}/content/val"
 				var ref = db.ref("Users-v1").child(snapshot.val()).child("info").child("FCM Token");
 				ref.once("value", function(snapshot) {
 					var bodyText = "Your question got " + val.toString() + " responses.";
-					const nid = addNotification(uid, val, event.params.qid, "questionViewed");
+					// const nid = addNotification(uid, val, event.params.qid, "questionViewed");
 					var payload = {
 					    notification : {
 					      body : bodyText
 					    },
 					    data :{
-					    	qid : event.params.qid,
-					    	nid : nid
+					    	qid : event.params.qid
 					    }
 					};
 					const token = snapshot.val();
